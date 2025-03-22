@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace SvgBuilder.Core
 {
@@ -15,17 +16,23 @@ namespace SvgBuilder.Core
         {
         }
 
-        public bool Build(string? inputPath, string? outputPath, out string destination, out Exception e)
+        public bool Build(string? inputPath, string? outputDirectory, out string destinationPath, out Exception e)
         {
-            destination = @"test\path.svg";
+            string filename = String.Empty;
+            destinationPath = String.Empty;
             e = new Exception();
 
             try
             {
-                if (!validatePath(inputPath))
+                if (!Util.ValidatePath(inputPath))
                 {
                     throw new Exception("Invalid input path.");
                 }
+                if (!Util.ValidateDirectory(outputDirectory))
+                {
+                    throw new Exception("Invalid output directory.");
+                }
+                destinationPath = Util.ConstructOutputPath(outputDirectory!, Util.GetFilename(inputPath!));
                 // TODO: add logic to read json from inputPath
                 // TODO: add logic to build svg from json
                 // TODO: add logic to save svg to outputPath
@@ -39,16 +46,11 @@ namespace SvgBuilder.Core
             return true;
         }
 
-        
-
-        private bool validatePath(string? path)
-        {
-            return true;
-        }
 
         private string ReadJson(string inputPath)
         {
             JsonTextReader reader = new JsonTextReader(new StreamReader(inputPath));
+            return reader.ReadAsString();
         }
 
         private string BuildSvg(string json)
@@ -61,3 +63,4 @@ namespace SvgBuilder.Core
             return true;
         }
     }
+}

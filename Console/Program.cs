@@ -21,10 +21,13 @@ class Program
         // Display welcome message and prompt for input
         Console.WriteLine("Welcome to SVG Builder!");
         Console.WriteLine("Please enter the path to the JSON specification for your SVG:");
-        inputPath = GetInput();
+        inputPath = GetInput(InputType.Path);
         Console.WriteLine("Please enter the path to your destination directory:");
-        outputPath = GetInput();
-        
+        outputPath = GetInput(InputType.Directory);
+
+        //inputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\Core\\input.json";
+        //outputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\Core\\";
+
         // Call svg builder and display results
         Builder svgBuilder = new Builder();
         if (svgBuilder.Build(inputPath, outputPath, out outputDestination, out e))
@@ -43,14 +46,38 @@ class Program
         }
     }
 
-    private static string? GetInput()
+    private static string? GetInput(InputType type)
     {
         string? input = Console.ReadLine();
-        if (string.IsNullOrEmpty(input))
+        switch (type)
         {
-            Console.WriteLine("Invalid input. Please provide a valid path:");
-            GetInput();
+            case InputType.Path:
+                if (!Util.ValidatePath(input))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid input. Please provide a valid path:");
+                    Console.ResetColor();
+                    return GetInput(type);
+                }
+                break;
+            case InputType.Directory:
+                if (!Util.ValidateDirectory(input))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid input. Please provide a valid directory:");
+                    Console.ResetColor();
+                    return GetInput(type);
+                }
+                break;
+            default:
+                break;
         }
         return input;
+    }
+
+    private enum InputType
+    {
+        Path,
+        Directory
     }
 }
