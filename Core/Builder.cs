@@ -20,7 +20,12 @@ namespace SvgBuilder.Core
             // TODO: implement singleton pattern for Builder
         }
 
-        public bool Build(string? inputPath, string? outputDirectory, out string destinationPath, out Exception e)
+        public bool Build(string? inputPath, 
+            string? outputDirectory, 
+            int? width, 
+            int? height, 
+            out string destinationPath, 
+            out Exception e)
         {
             string filename = string.Empty;
             destinationPath = string.Empty;
@@ -39,7 +44,7 @@ namespace SvgBuilder.Core
                 destinationPath = Util.ConstructOutputPath(outputDirectory!, Util.GetFilename(inputPath!));
                 // TODO: add logic to read json from inputPath
                 string json = ReadJson(inputPath!);
-                SvgSpec svgSpec = GetSvgSpec(json);
+                SvgSpec svgSpec = GetSvgSpec(json, width, height, Color.White);
                 string svg = BuildSvgLINQ(svgSpec);
                 Console.WriteLine(svg);
 
@@ -62,7 +67,7 @@ namespace SvgBuilder.Core
             return jsonStringFromFile;
         }
 
-        private SvgSpec GetSvgSpec(string jsonString)
+        private SvgSpec GetSvgSpec(string jsonString, int? width, int? height, Color bgColor)
         {
             // Establish method variables
             List<SvgElement> svgElements = new List<SvgElement>();
@@ -93,11 +98,18 @@ namespace SvgBuilder.Core
                 svgElements.Add(element);
             }
 
-            // Hardcode width, height, and bg color for now
-            // TODO: add logic to allow for dynamic svg size and bg color
-            SvgSpec svgSpec = new SvgSpec(1000, 1000, Color.White, svgElements);
+            // Handle width and height input
+            if (width == null || height == null)
+            {
+                SvgSpec svgSpec = new SvgSpec(bgColor, svgElements);
+                return svgSpec;
+            }
+            else
+            {
+                SvgSpec svgSpec = new SvgSpec((int)width, (int)height, bgColor, svgElements);
+                return svgSpec;
+            }
 
-            return svgSpec;
         }
 
         // SVG builder using LINQ to XML
