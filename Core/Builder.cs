@@ -45,9 +45,7 @@ namespace SvgBuilder.Core
                 // TODO: add logic to read json from inputPath
                 string json = ReadJson(inputPath!);
                 SvgSpec svgSpec = GetSvgSpec(json, width, height, Color.White);
-                string svg = BuildSvgLINQ(svgSpec);
-                Console.WriteLine(svg);
-
+                BuildSvgLINQ(svgSpec, destinationPath);
                 // TODO: add logic to build svg from json
                 // TODO: add logic to save svg to outputPath
 
@@ -101,11 +99,13 @@ namespace SvgBuilder.Core
             // Handle width and height input
             if (width == null || height == null)
             {
+                // Build svg spec with auto-calculated width and height
                 SvgSpec svgSpec = new SvgSpec(bgColor, svgElements);
                 return svgSpec;
             }
             else
             {
+                // Build svg spec with user-defined width and height
                 SvgSpec svgSpec = new SvgSpec((int)width, (int)height, bgColor, svgElements);
                 return svgSpec;
             }
@@ -113,7 +113,7 @@ namespace SvgBuilder.Core
         }
 
         // SVG builder using LINQ to XML
-        private string BuildSvgLINQ(SvgSpec spec)
+        private bool BuildSvgLINQ(SvgSpec spec, string path)
         {
             List<SvgElement> svgElements = spec.Elements;
 
@@ -122,19 +122,26 @@ namespace SvgBuilder.Core
             XElement outputSvg = new XElement(svgNamespace + "svg",
                 new XAttribute("width", spec.Width),
                 new XAttribute("height", spec.Height),
+                new XAttribute("viewBox", $"0 0 {spec.Width} {spec.Height}"),
                 new XAttribute("style", $"background-color: {ColorTranslator.ToHtml(spec.BackgroundColor)}"),
 
-                // TODO: change logic to accomodate different shapes
-                // TODO: IMPORTANT: Change logid to place shapes in center of display window
-                // Create the shapes within the svg
-                svgElements.Select(shape => new XElement(svgNamespace + "rect", 
-                    new XAttribute("x", shape.Min.Item1),
-                    new XAttribute("y", shape.Min.Item2),
-                    new XAttribute("width", shape.Max.Item1 - shape.Min.Item1),
-                    new XAttribute("height", shape.Max.Item2 - shape.Min.Item2),
-                    new XAttribute("fill", ColorTranslator.ToHtml(shape.Color)
-                    ))));
-            return outputSvg.ToString();
+                new XElement(svgNamespace + "g",
+                    new XAttribute("transform", $"translate({spec.TranslationX}, {spec.TranslationY})"),
+                    // TODO: change logic to accomodate different shapes
+                    // Create the shapes within the svg
+                    svgElements.Select(shape => new XElement(svgNamespace + "rect", 
+                        new XAttribute("x", shape.Min.Item1),
+                        new XAttribute("y", shape.Min.Item2),
+                        new XAttribute("width", shape.Max.Item1 - shape.Min.Item1),
+                        new XAttribute("height", shape.Max.Item2 - shape.Min.Item2),
+                        new XAttribute("fill", ColorTranslator.ToHtml(shape.Color)
+                        )))));
+
+            // Save the svg to disk
+            string svgString = outputSvg.ToString();
+            File.WriteAllText(path, svgString);
+
+            return true;
         }
 
         private bool SaveSvg(string svg, string outputPath)
