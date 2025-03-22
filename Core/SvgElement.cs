@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SvgBuilder.Core
 {
-    public class SvgElement
+    public struct SvgElement
     {
         public string? Id { get; set; }
         public Tuple<int, int> Min { get; set; }
@@ -34,5 +34,9 @@ namespace SvgBuilder.Core
             Type = type;
         }
 
+        public override string ToString()
+        {
+            return $"Id: {Id}, Type: {Type}, Min: ({Min.Item1}, {Min.Item2}), Max: ({Max.Item1}, {Max.Item2}), Color: {Color}";
+        }
     }
 }
