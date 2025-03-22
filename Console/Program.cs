@@ -12,6 +12,12 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.WriteLine("Welcome to SVG Builder!");
+        Run();
+    }
+
+    public static bool Run()
+    {
         // Establish program variables
         string? inputPath = String.Empty;
         string? outputPath = String.Empty;
@@ -21,7 +27,6 @@ class Program
         Exception e = new Exception();
 
         // Display welcome message and prompt for file input
-        Console.WriteLine("Welcome to SVG Builder!");
         Console.WriteLine("Please enter the path to the JSON specification for your SVG:");
         inputPath = GetInput(InputType.Path);
         Console.WriteLine("Please enter the path to your destination directory:");
@@ -33,6 +38,7 @@ class Program
         {
             GetInputDims(out inputWidth, out inputHeight);
         }
+        // TODO: add check for dimensions here and reprompt if they are too small
 
         //inputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\Core\\input.json";
         //outputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\Core\\";
@@ -52,6 +58,17 @@ class Program
             Console.WriteLine($"\nThere was an error building your SVG:");
             Console.WriteLine(e.Message + "\n");
             Console.ResetColor();
+        }
+        Console.WriteLine("Would you like to build another SVG? (Y/N)");
+        string? another = Console.ReadLine().ToUpper();
+        if (another == "Y")
+        {
+            return Run();
+        }
+        else
+        {
+            Console.WriteLine("Thank you for using SVG Builder!");
+            return true;
         }
     }
 
