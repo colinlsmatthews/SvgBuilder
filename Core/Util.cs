@@ -42,5 +42,20 @@ namespace SvgBuilder.Core
         {
             return Path.Combine(outputDir, filename + ".svg");
         }
+
+        public static void CalculateBounds(List<SvgElement> elements, 
+            out int width, 
+            out int height,
+            out int minX,
+            out int minY)
+        {
+            minX = elements.Min(e => e.Min.Item1);
+            minY = elements.Min(e => e.Min.Item2);
+            int maxX = elements.Max(e => e.Max.Item1);
+            int maxY = elements.Max(e => e.Max.Item2);
+
+            width = maxX - minX;
+            height = maxY - minY;
+        }
     }
 }
