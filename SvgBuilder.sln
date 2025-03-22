@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35514.174 d17.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{8F69CEDC-5694-4615-9A8C-8ACE322D1BC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgBuilder.CLI", "Console\SvgBuilder.CLI.csproj", "{7EACF89E-49DF-4B29-903D-1C4EF55E22A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgBuilder.Core", "Core\SvgBuilder.Core.csproj", "{A419DECF-70C9-44D2-AF7F-E4B82F5F8DD1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F69CEDC-5694-4615-9A8C-8ACE322D1BC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F69CEDC-5694-4615-9A8C-8ACE322D1BC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F69CEDC-5694-4615-9A8C-8ACE322D1BC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F69CEDC-5694-4615-9A8C-8ACE322D1BC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EACF89E-49DF-4B29-903D-1C4EF55E22A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EACF89E-49DF-4B29-903D-1C4EF55E22A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EACF89E-49DF-4B29-903D-1C4EF55E22A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EACF89E-49DF-4B29-903D-1C4EF55E22A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A419DECF-70C9-44D2-AF7F-E4B82F5F8DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A419DECF-70C9-44D2-AF7F-E4B82F5F8DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A419DECF-70C9-44D2-AF7F-E4B82F5F8DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A419DECF-70C9-44D2-AF7F-E4B82F5F8DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
