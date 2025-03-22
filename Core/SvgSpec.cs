@@ -12,23 +12,38 @@ namespace SvgBuilder.Core
     {
         public int Width { get; set; }
         public int Height { get; set; }
+        public double TranslationX { get; set; }
+        public double TranslationY { get; set; }
         public Color BackgroundColor { get; set; }
         public List<SvgElement> Elements { get; set; }
 
-        // Constructor to auto-calculate width and height
+        // Default constructor
+        public SvgSpec()
+        {
+            Width = 0;
+            Height = 0;
+            TranslationX = 0;
+            TranslationY = 0;
+            BackgroundColor = Color.White;
+            Elements = new List<SvgElement>();
+        }
+
+        // Override constructor to auto-calculate width and height
         public SvgSpec(Color backgroundColor, List<SvgElement> elements)
         {
             BackgroundColor = backgroundColor;
             Elements = elements;
-            CalculateBounds(elements, out int width, out int height);
+            Util.CalculateBounds(elements, out int width, out int height, out int minX, out int minY);
             Width = width;
             Height = height;
+            TranslationX = -minX;
+            TranslationY = -minY;
         }
 
-        // Constructor for custom width and height
+        // Override constructor for custom width and height
         public SvgSpec(int width, int height, Color backgroundColor, List<SvgElement> elements)
         {
-            CalculateBounds(elements, out int calculatedWidth, out int calculatedHeight);
+            Util.CalculateBounds(elements, out int calculatedWidth, out int calculatedHeight, out int minX, out int minY);
             if (calculatedWidth > width && calculatedHeight > height)
             {
                 throw new ArgumentException($"Specified width and height are too small to encompass elements" +
@@ -49,19 +64,8 @@ namespace SvgBuilder.Core
             Height = height;
             BackgroundColor = backgroundColor;
             Elements = elements;
+            TranslationX = (width - calculatedWidth) / 2.0 - minX;
+            TranslationY = (height - calculatedHeight) / 2.0 - minY;
         }
-
-        private void CalculateBounds(List<SvgElement> elements, out int width, out int height)
-        {
-            int minX = elements.Min(e => e.Min.Item1);
-            int minY = elements.Min(e => e.Min.Item2);
-            int maxX = elements.Max(e => e.Max.Item1);
-            int maxY = elements.Max(e => e.Max.Item2);
-
-            width = maxX - minX;
-            height = maxY - minY;
-        }
-
-
     }
 }
