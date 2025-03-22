@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using Newtonsoft.Json;
@@ -42,13 +39,10 @@ namespace SvgBuilder.Core
                     throw new Exception("Invalid output directory.");
                 }
                 destinationPath = Util.ConstructOutputPath(outputDirectory!, Util.GetFilename(inputPath!));
-                // TODO: add logic to read json from inputPath
                 string json = ReadJson(inputPath!);
                 SvgSpec svgSpec = GetSvgSpec(json, width, height, Color.White);
-                BuildSvgLINQ(svgSpec, destinationPath);
-                // TODO: add logic to build svg from json
-                // TODO: add logic to save svg to outputPath
-
+                string svgText = BuildSvgLINQ(svgSpec, destinationPath);
+                SaveSvg(destinationPath, svgText);
             }
             catch (Exception ex)
             {
@@ -113,7 +107,7 @@ namespace SvgBuilder.Core
         }
 
         // SVG builder using LINQ to XML
-        private bool BuildSvgLINQ(SvgSpec spec, string path)
+        private string BuildSvgLINQ(SvgSpec spec, string path)
         {
             List<SvgElement> svgElements = spec.Elements;
 
@@ -139,14 +133,20 @@ namespace SvgBuilder.Core
 
             // Save the svg to disk
             string svgString = outputSvg.ToString();
-            File.WriteAllText(path, svgString);
-
-            return true;
+            return svgString;
         }
 
-        private bool SaveSvg(string svg, string outputPath)
+        private bool SaveSvg(string outputPath, string svg)
         {
-            return true;
+            try
+            {
+                File.WriteAllText(outputPath, svg);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error saving SVG: {e.Message}");
+            }
         }
     }
 }
