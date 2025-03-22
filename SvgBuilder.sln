@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35514.174 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{8F69CEDC-5694-4615-9A8C-8ACE322D1BC1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgBuilder.UI", "WPF\SvgBuilder.UI.csproj", "{8F69CEDC-5694-4615-9A8C-8ACE322D1BC1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SvgBuilder.CLI", "Console\SvgBuilder.CLI.csproj", "{7EACF89E-49DF-4B29-903D-1C4EF55E22A8}"
 EndProject
