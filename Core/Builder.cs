@@ -6,7 +6,8 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
+using Newtonsoft.Json.Linq;
+using System.Drawing;
 
 namespace SvgBuilder.Core
 {
@@ -14,12 +15,13 @@ namespace SvgBuilder.Core
     {
         public Builder()
         {
+            // TODO: implement singleton pattern for Builder
         }
 
         public bool Build(string? inputPath, string? outputDirectory, out string destinationPath, out Exception e)
         {
-            string filename = String.Empty;
-            destinationPath = String.Empty;
+            string filename = string.Empty;
+            destinationPath = string.Empty;
             e = new Exception();
 
             try
@@ -34,6 +36,10 @@ namespace SvgBuilder.Core
                 }
                 destinationPath = Util.ConstructOutputPath(outputDirectory!, Util.GetFilename(inputPath!));
                 // TODO: add logic to read json from inputPath
+                string json = ReadJson(inputPath!);
+                SvgSpec svgSpec = GetSvgSpec(json);
+                bool svg = BuildSvg(svgSpec);
+
                 // TODO: add logic to build svg from json
                 // TODO: add logic to save svg to outputPath
 
@@ -49,13 +55,55 @@ namespace SvgBuilder.Core
 
         private string ReadJson(string inputPath)
         {
-            JsonTextReader reader = new JsonTextReader(new StreamReader(inputPath));
-            return reader.ReadAsString();
+            string jsonStringFromFile = File.ReadAllText(inputPath);
+            return jsonStringFromFile;
         }
 
-        private string BuildSvg(string json)
+        private SvgSpec GetSvgSpec(string jsonString)
         {
-            return String.Empty;
+            // Establish method variables
+            List<SvgElement> svgElements = new List<SvgElement>();
+                        
+            // Establish json load settings. Use defaults for now
+            JsonLoadSettings settings = new JsonLoadSettings()
+            {
+                CommentHandling = CommentHandling.Ignore,
+                DuplicatePropertyNameHandling = DuplicatePropertyNameHandling.Replace,
+                LineInfoHandling = LineInfoHandling.Load
+            };
+
+            JObject jsonData = JObject.Parse(jsonString, settings);
+            // TODO: add logic to allow for other shapes (i.e. circles, polygons, etc.)
+            JArray boxesData = (JArray)jsonData["boxes"];
+
+            // Assume all shapes are rectangles for now
+            for(int i = 0; i < boxesData.Count; i++) 
+            {
+                JObject box = (JObject)boxesData[i];
+
+                Tuple<int, int> min = new Tuple<int, int>((int)box["min"][0], (int)box["min"][1]);
+                Tuple<int, int> max = new Tuple<int, int>((int)box["max"][0], (int)box["max"][1]);
+                Color color = ColorTranslator.FromHtml((string)box["color"]);
+
+                SvgElement element = new SvgElement($"box_{i}", min, max, color, "rectangle");
+                svgElements.Add(element);
+            }
+
+            // Hardcode width, height, and bg color for now
+            // TODO: add logic to allow for dynamic svg size and bg color
+            SvgSpec svgSpec = new SvgSpec(1000, 1000, Color.White, svgElements);
+            return svgSpec;
+
+        }
+
+        private bool BuildSvg(SvgSpec spec)
+        {
+            List<SvgElement> svgElements = spec.Elements;
+            foreach (SvgElement svgElement in svgElements)
+            {
+                Console.WriteLine(svgElement.Id);
+            }
+            return true;
         }
 
         private bool SaveSvg(string svg, string outputPath)
