@@ -1,10 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
 using SvgBuilder.Core;
 
 namespace SvgBuilder.CLI;
@@ -40,8 +34,8 @@ class Program
         }
         // TODO: add check for dimensions here and reprompt if they are too small
 
-        //inputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\Core\\input.json";
-        //outputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\Core\\";
+        //inputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\input.json";
+        //outputPath = "C:\\Users\\clsm\\source\\repos\\SvgBuilder\\";
 
         // Call svg builder and display results
         Builder svgBuilder = new Builder();
